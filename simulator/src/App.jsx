@@ -37,6 +37,37 @@ function App() {
 
       {/* Simulator Section */}
       <div className="simulator-section">
+        {[
+          { id: 1, key: 'bedRoom', label: 'Bed Room' },
+          { id: 2, key: 'clothingRoom', label: 'Clothing Room' },
+          { id: 3, key: 'guestBedRoom', label: 'Guest Room' },
+          { id: 4, key: 'livingRoom', label: 'Living Room' },
+          { id: 5, key: 'playRoom', label: 'Play Room' },
+          { id: 6, key: 'kitchen', label: 'Kitchen' },
+          { id: 7, key: 'outdoor', label: 'Outdoor' }
+        ].map(badge => (
+          <div key={badge.id} className={`status-badge status-badge-${badge.id}`}>
+            <div className="badge-header">
+              <div className={`status-dot ${lights[badge.key] ? 'flashing-green' : ''}`}></div>
+              <div className="status-text">
+                <svg className="bulb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.9 1.3 1.5 1.5 2.5"/>
+                  <path d="M9 18h6"/>
+                  <path d="M10 22h4"/>
+                </svg>
+                {lights[badge.key] ? 'On' : 'Off'}
+              </div>
+            </div>
+            <div className="badge-content">
+              <label className="switch">
+                <input type="checkbox" checked={lights[badge.key]} onChange={(e) => setLights({...lights, [badge.key]: e.target.checked})} />
+                <span className="slider round"></span>
+              </label>
+              <span className="toggle-label">{badge.label}</span>
+            </div>
+          </div>
+        ))}
+
         <div className="image-layer z-0">
           <img src={image1} alt="Layer 0" />
         </div>
