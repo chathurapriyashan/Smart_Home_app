@@ -30,6 +30,7 @@ function App() {
     9: false, 10: false, 11: false, 12: false, 13: false, 14: false, 15: false, 16: false,
     17: false, 18: false, 19: false, 21: false
   });
+  const [savedState, setSavedState] = useState({ lights: null, wallSwitches: null });
 
   const handleLightToggle = (key, value) => {
     if (mainSwitchOn) {
@@ -148,6 +149,7 @@ function App() {
                   const isOn = e.target.checked;
                   setMainSwitchOn(isOn);
                   if (!isOn) {
+                    setSavedState({ lights, wallSwitches });
                     setLights({
                       livingRoom: false,
                       playRoom: false,
@@ -161,6 +163,11 @@ function App() {
                       9: false, 10: false, 11: false, 12: false, 13: false, 14: false, 15: false, 16: false,
                       17: false, 18: false, 19: false, 21: false 
                     });
+                  } else {
+                    if (savedState.lights && savedState.wallSwitches) {
+                      setLights(savedState.lights);
+                      setWallSwitches(savedState.wallSwitches);
+                    }
                   }
                 }} 
               />

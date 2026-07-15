@@ -60,8 +60,6 @@ $color-gold: #ffd700;
     transition: all 0.3s ease;
 
     &:hover {
-      background-color: $color-gold;
-      box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
       transform: translate(-50%, -50%) scale(1.05);
     }
   }
