@@ -133,33 +133,138 @@ $color-gold: #ffd700;
 /* Setting Section */
 .setting-section {
   position: relative;
-  margin-top: 100vh; // push down past the simulator viewport
+  margin-top: 100vh;
   width: 100vw;
   min-height: 100vh;
-  background-color: #ffffff;
-  color: $color-black;
+  background-color: #0e0e0e30;
+  backdrop-filter: blur(2px);
+  color: #ffffff;
   z-index: 10;
-  padding: 5rem;
-  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.3);
+  padding: 8rem 5rem;
+  box-shadow: 0 -15px 50px rgba(0, 0, 0, 0.8);
   
   .setting-content {
     max-width: 1200px;
     margin: 0 auto;
 
-    h1 {
-      font-size: 5rem;
-      margin-bottom: 2rem;
-      background: linear-gradient(to right, $color-orange, $color-gold);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      font-weight: 800;
-      letter-spacing: -1px;
-    }
-    
-    p {
-      font-size: 1.6rem;
-      line-height: 1.6;
-      color: #333;
+    .settings-container {
+      display: flex;
+      flex-direction: column;
+      gap: 4rem;
+
+      .header-section {
+        border-bottom: 2px solid rgba(255, 215, 0, 0.2);
+        padding-bottom: 2rem;
+
+        h2 {
+          font-size: 5rem;
+          margin-bottom: 1rem;
+          background: linear-gradient(to right, $color-orange, $color-gold);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          font-weight: 800;
+          letter-spacing: -1px;
+        }
+        
+        p {
+          font-size: 1.8rem;
+          color: #aaaaaa;
+        }
+      }
+
+      .toggles-section {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 3rem;
+
+        .toggle-item {
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 215, 0, 0.1);
+          border-radius: 1.5rem;
+          padding: 2.5rem;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 2rem;
+          width: calc(25% - 2.25rem); // 4 items per row approximately, or flex wrap
+          min-width: 200px;
+          transition: all 0.3s ease;
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 215, 0, 0.3);
+            transform: translateY(-5px);
+          }
+
+          .toggle-label {
+            font-size: 1.6rem;
+            font-weight: 600;
+            text-align: center;
+            color: #eeeeee;
+            text-transform: capitalize;
+          }
+
+          /* The switch - the box around the slider */
+          .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+
+            input { 
+              opacity: 0;
+              width: 0;
+              height: 0;
+            }
+
+            .slider {
+              position: absolute;
+              cursor: pointer;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              background-color: #333;
+              transition: .4s;
+            }
+
+            .slider:before {
+              position: absolute;
+              content: "";
+              height: 26px;
+              width: 26px;
+              left: 4px;
+              bottom: 4px;
+              background-color: white;
+              transition: .4s;
+            }
+
+            input:checked + .slider {
+              background-color: $color-orange;
+              box-shadow: 0 0 15px rgba(243, 156, 18, 0.4);
+            }
+
+            input:focus + .slider {
+              box-shadow: 0 0 1px $color-orange;
+            }
+
+            input:checked + .slider:before {
+              transform: translateX(26px);
+            }
+
+            /* Rounded sliders */
+            .slider.round {
+              border-radius: 34px;
+            }
+
+            .slider.round:before {
+              border-radius: 50%;
+            }
+          }
+        }
+      }
     }
   }
 }
