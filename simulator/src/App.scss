@@ -201,6 +201,19 @@ $color-gold: #ffd700;
   .status-badge-5 { top: 53%; left: 50%; }
   .status-badge-6 { top: 50%; left: 72%; }
   .status-badge-7 { top: 82%; left: 50%; } // Extrapolated
+  .status-badge-8 { top: 59%; left: 80%; } // Wirelines toggle
+  .status-badge-9 { top: 39%; left: 14%; }
+  .status-badge-10 { top: 39%; left: 55%; }
+  .status-badge-11 { top: 32%; left: 64%; }
+  .status-badge-12 { top: 32%; left: 72%; }
+  .status-badge-13 { top: 32%; left: 72%; }
+  .status-badge-14 { top: 64%; left: 61%; }
+  .status-badge-15 { top: 64%; left: 52%; }
+  .status-badge-16 { top: 58%; left: 24%; }
+  .status-badge-17 { top: 49%; left: 6%; }
+  .status-badge-18 { top: 17%; left: 16%; }
+  .status-badge-19 { top: 49%; left: 14%; }
+  .status-badge-21 { top: 32%; left: 47%; }
   
   .image-layer {
     position: absolute;
@@ -253,6 +266,9 @@ $color-gold: #ffd700;
     opacity: 0;
     clip-path: polygon(0 0 , 100% 0 , 100% 16.5%, 10% 16.5% , 10% 84% , 0 84%, 89.5% 84% , 89.5% 47% , 89% 48%, 89% 16.5% , 100% 16.5% , 100% 100% , 0% 100%);
   }
+  .z-8 { z-index: 8; }
+  .z-9 { z-index: 9; }
+  .z-10 { z-index: 10; }
 }
 
 /* Setting Section */
