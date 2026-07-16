@@ -10,8 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "firebase": "^12.16.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
+    "react-hot-toast": "^2.6.0",
     "react-icons": "^5.7.0",
     "sass": "^1.101.0"
   },

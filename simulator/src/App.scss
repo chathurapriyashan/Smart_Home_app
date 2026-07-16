@@ -7,6 +7,21 @@ $color-gold: #ffd700;
   width: 100%;
 }
 
+.loading-spinner {
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid $color-gold;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 /* Loading Screen */
 .loading-screen {
   position: fixed;
@@ -204,7 +219,6 @@ $color-gold: #ffd700;
   .status-badge-10 { top: 39%; left: 55%; }
   .status-badge-11 { top: 32%; left: 64%; }
   .status-badge-12 { top: 32%; left: 72%; }
-  .status-badge-13 { top: 32%; left: 72%; }
   .status-badge-14 { top: 64%; left: 61%; }
   .status-badge-15 { top: 64%; left: 52%; }
   .status-badge-16 { top: 58%; left: 24%; }
