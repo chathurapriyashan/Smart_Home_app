@@ -1,5 +1,7 @@
 package com.example.smarthome.viewmodel
 
+import android.util.Log
+import com.example.smarthome.firebase.FirestoreService
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import com.example.smarthome.model.Device
@@ -9,7 +11,37 @@ import com.example.smarthome.model.DeviceType
 
 class HomeViewModel : ViewModel() {
 
+    private val firestoreService = FirestoreService()
 
+    private var firebaseData: Map<String, Any> = emptyMap()
+
+
+    private fun updateDevicesFromFirebase() {
+
+        val isOn =
+            firebaseData["g_living_rm_light"] as? Boolean ?: false
+
+
+        val index = _devices.indexOfFirst {
+            it.id == "living_light"
+        }
+
+
+        if (index != -1) {
+
+            _devices[index] =
+                _devices[index].copy(
+
+                    status =
+                        if (isOn)
+                            DeviceStatus.ON
+                        else
+                            DeviceStatus.OFF,
+
+                    isEnabled = isOn
+                )
+        }
+    }
     // All smart home devices
     private val _devices = mutableStateListOf(
 
@@ -97,26 +129,40 @@ class HomeViewModel : ViewModel() {
     val devices: List<Device>
         get() = _devices
 
+    init {
+
+        firestoreService.listenToDevices { data ->
+
+            firebaseData = data
+
+            updateDevicesFromFirebase()
+
+            Log.d("HomeViewModel", "Firebase Data: $firebaseData")
+
+        }
+
+    }
+
 
 
     // Change device ON/OFF state
     fun toggleDevice(deviceId: String) {
 
-        val device = _devices.find {
-            it.id == deviceId
-        }
+        when (deviceId) {
 
-        device?.let {
+            "living_light" -> {
 
-            if (it.status == DeviceStatus.ON) {
+                val currentValue =
+                    firebaseData["g_living_rm_light"] as? Boolean ?: false
 
-                it.status = DeviceStatus.OFF
-                it.isEnabled = false
+                firestoreService.updateBooleanField(
+                    "g_living_rm_light",
+                    !currentValue
+                )
+            }
 
-            } else {
-
-                it.status = DeviceStatus.ON
-                it.isEnabled = true
+            else -> {
+                // Other devices will be added later
             }
         }
     }

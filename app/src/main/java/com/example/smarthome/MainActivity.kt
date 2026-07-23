@@ -17,7 +17,7 @@ val db = Firebase.firestore
 
 
 fun getRealTimeData(){
-    val TAG = "MainActivity-DATABASE_REALTIME"
+    val TAG = "REALTIME_DATA"
     val docRef = db.collection(CollectionName).document(DocumentId)
     docRef.addSnapshotListener { snapshot, e ->
         if (e != null) {
@@ -26,8 +26,7 @@ fun getRealTimeData(){
         }
 
         if (snapshot != null && snapshot.exists()) {
-//            val houseDevices = snapshot.toObject(HouseDevices::class.java)
-//            Log.d(TAG, "Current data: $houseDevices")
+            Log.d(TAG, "Current data: ${snapshot.data}")
         } else {
             Log.d(TAG, "Current data: null")
         }
