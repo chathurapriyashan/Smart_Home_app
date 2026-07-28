@@ -4,6 +4,7 @@ import './App.scss';
 import image1 from './1.png';
 import image2 from './2.png';
 import image3 from './3.png';
+import image4 from './4.png';
 import lightsLines from './lights-lines.png';
 import switchingLines from './switching-lines.png';
 import outdoorLines from './outdoor-lines.png';
@@ -229,6 +230,12 @@ function App() {
         </div>
         <div className="image-layer z-10" style={{ opacity: isWirelinesHovered ? 1 : 0, transition: 'opacity 0.4s ease' }}>
           <img src={outdoorLines} alt="Outdoor Lines" />
+        </div>
+        <div className="image-layer z-11" style={{ opacity: appStatus?.f_bed_rm_ac ? 0.3 : 0, transition: 'opacity 0.4s ease' }}>
+          <img src={image4} alt="Layer 11" />
+        </div>
+        <div className="image-layer z-12" style={{ opacity: appStatus?.g_living_rm_ac ? 0.3 : 0, transition: 'opacity 0.4s ease' }}>
+          <img src={image4} alt="Layer 12" />
         </div>
       </div>
 
