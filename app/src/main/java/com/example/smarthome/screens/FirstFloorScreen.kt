@@ -16,10 +16,10 @@ import androidx.compose.material.icons.filled.MeetingRoom
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -29,12 +29,9 @@ import com.example.smarthome.components.DashboardSummary
 import com.example.smarthome.components.DeviceCard
 import com.example.smarthome.components.RoomSection
 import com.example.smarthome.components.TimerCard
-import com.example.smarthome.model.DeviceStatus
 import com.example.smarthome.ui.theme.*
-import com.example.smarthome.utils.startTimer
 import com.example.smarthome.viewmodel.HomeViewModel
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
 
 
 @Composable
@@ -43,10 +40,33 @@ fun FirstFloorScreen(
 ) {
 
     val devices = homeViewModel.devices
+    val ironScheduledTimestamp = homeViewModel.ironScheduledTimestamp
 
     var remainingTime by remember { mutableStateOf("00:00") }
-    val coroutineScope = rememberCoroutineScope()
-    var timerJob by remember { mutableStateOf<Job?>(null) }
+
+    // Reactively update remaining timer display based on f_iron_scheduled_time from Firebase
+    LaunchedEffect(ironScheduledTimestamp) {
+        if (ironScheduledTimestamp != null) {
+            while (true) {
+                val currentSecs = System.currentTimeMillis() / 1000
+                val targetSecs = ironScheduledTimestamp.seconds
+                val diffSecs = targetSecs - currentSecs
+
+                if (diffSecs <= 0) {
+                    remainingTime = "00:00"
+                    homeViewModel.stopIronTimer()
+                    break
+                } else {
+                    val mins = diffSecs / 60
+                    val secs = diffSecs % 60
+                    remainingTime = String.format("%02d:%02d", mins, secs)
+                }
+                delay(1000)
+            }
+        } else {
+            remainingTime = "00:00"
+        }
+    }
 
 
     Column(
@@ -138,31 +158,15 @@ fun FirstFloorScreen(
                     )
                 }
 
-            // Iron Safety Timer
+            // Iron Safety Timer linked with f_iron_scheduled_time
             TimerCard(
                 title = "Iron Safety Timer",
                 remainingTime = remainingTime,
                 onStartTimer = { minutes ->
-                    timerJob?.cancel()
-                    timerJob = coroutineScope.launch {
-                        startTimer(
-                            minutes = minutes,
-                            onTick = { remainingTime = it },
-                            onFinish = {
-                                remainingTime = "00:00"
-                                // Turn iron OFF automatically
-                                homeViewModel.getDevice("cloth_rm_iron")?.let {
-                                    it.status = DeviceStatus.OFF
-                                    it.isEnabled = false
-                                }
-                                homeViewModel.toggleDevice("cloth_rm_iron")
-                            }
-                        )
-                    }
+                    homeViewModel.startIronTimer(minutes)
                 },
                 onStopTimer = {
-                    timerJob?.cancel()
-                    remainingTime = "00:00"
+                    homeViewModel.stopIronTimer()
                 }
             )
 

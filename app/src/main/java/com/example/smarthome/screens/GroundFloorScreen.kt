@@ -91,8 +91,7 @@ fun GroundFloorScreen(
                 .filter {
                     it.id in listOf(
                         "kitchen_light",
-                        "kitchen_outlet",
-                        "kitchen_switch"
+                        "kitchen_outlet"
                     )
                 }
                 .forEach { device ->

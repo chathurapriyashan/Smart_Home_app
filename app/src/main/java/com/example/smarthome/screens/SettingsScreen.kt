@@ -1,5 +1,6 @@
 package com.example.smarthome.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,15 +18,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Bed
-import androidx.compose.material.icons.filled.Checkroom
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Kitchen
-import androidx.compose.material.icons.filled.Living
-import androidx.compose.material.icons.filled.MeetingRoom
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.SportsEsports
+import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -46,8 +41,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.smarthome.R
 import com.example.smarthome.ui.theme.*
 
 
@@ -83,7 +81,7 @@ fun SettingsScreen() {
         // ===== FLOOR PLAN SECTION =====
         SectionTitle(
             icon = Icons.Default.Home,
-            title = "Floor Plan",
+            title = "Floor Plan Rooms",
             iconTint = PrimaryTealLight,
             iconBgColor = PrimaryTeal.copy(alpha = 0.15f)
         )
@@ -188,6 +186,36 @@ fun SettingsScreen() {
                         fontWeight = FontWeight.SemiBold
                     )
                 }
+            }
+        }
+
+
+        // ===== FLOOR PLAN ARCHITECTURE IMAGE (Below Safety Timer & Above About) =====
+        SectionTitle(
+            icon = Icons.Default.Map,
+            title = "Architectural Diagram",
+            iconTint = AccentCyan,
+            iconBgColor = AccentCyan.copy(alpha = 0.15f)
+        )
+
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = DarkCard
+            )
+        ) {
+            Column(
+                modifier = Modifier.padding(12.dp)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.floor_plan),
+                    contentDescription = "Architectural Floor Plan",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.FillWidth
+                )
             }
         }
 

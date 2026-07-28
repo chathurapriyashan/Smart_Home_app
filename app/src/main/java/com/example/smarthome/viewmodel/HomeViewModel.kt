@@ -3,10 +3,14 @@ package com.example.smarthome.viewmodel
 import android.util.Log
 import com.example.smarthome.firebase.FirestoreService
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.smarthome.model.Device
 import com.example.smarthome.model.DeviceStatus
 import com.example.smarthome.model.DeviceType
+import com.google.firebase.Timestamp
 
 
 class HomeViewModel : ViewModel() {
@@ -14,6 +18,9 @@ class HomeViewModel : ViewModel() {
     private val firestoreService = FirestoreService()
 
     private var firebaseData: Map<String, Any> = emptyMap()
+
+    var ironScheduledTimestamp by mutableStateOf<Timestamp?>(null)
+        private set
 
 
     // Helper to update a single device from Firebase
@@ -37,7 +44,6 @@ class HomeViewModel : ViewModel() {
         syncDevice("kitchen_outlet", "g_kitchen_rm_switch")
         syncDevice("living_ac", "g_living_rm_ac")
         syncDevice("living_switch", "g_living_rm_switch")
-        syncDevice("kitchen_switch", "g_kitchen_rm_switch")
         syncDevice("playing_rm_light", "g_playing_rm_light")
         syncDevice("playing_rm_switch", "g_play_rm_switch")
 
@@ -51,6 +57,9 @@ class HomeViewModel : ViewModel() {
         syncDevice("cloth_rm_light", "f_cloth_rm_light")
         syncDevice("cloth_rm_iron", "f_cloth_rm_iron")
         syncDevice("cloth_rm_switch", "f_cloth_rm_switch")
+
+        // Parse scheduled timer timestamp for iron
+        ironScheduledTimestamp = firebaseData["f_iron_scheduled_time"] as? Timestamp
 
         // Guest Room
         syncDevice("guest_rm_light", "f_guest_rm_light")
@@ -93,11 +102,6 @@ class HomeViewModel : ViewModel() {
         Device(
             id = "living_switch",
             name = "Living Room Switch",
-            type = DeviceType.SWITCH
-        ),
-        Device(
-            id = "kitchen_switch",
-            name = "Kitchen Room Switch",
             type = DeviceType.SWITCH
         ),
         Device(
@@ -210,7 +214,6 @@ class HomeViewModel : ViewModel() {
         "kitchen_outlet" to "g_kitchen_rm_switch",
         "living_ac" to "g_living_rm_ac",
         "living_switch" to "g_living_rm_switch",
-        "kitchen_switch" to "g_kitchen_rm_switch",
         "playing_rm_light" to "g_playing_rm_light",
         "playing_rm_switch" to "g_play_rm_switch",
         // First Floor — Bedroom
@@ -241,6 +244,22 @@ class HomeViewModel : ViewModel() {
         } else {
             Log.w("HomeViewModel", "No Firebase field mapping for device: $deviceId")
         }
+    }
+
+    // Start iron timer by setting f_iron_scheduled_time timestamp in Firebase
+    fun startIronTimer(minutes: Int) {
+        val currentSeconds = System.currentTimeMillis() / 1000
+        val targetSeconds = currentSeconds + (minutes * 60)
+        val timestamp = Timestamp(targetSeconds, 0)
+        
+        firestoreService.updateField("f_iron_scheduled_time", timestamp)
+        firestoreService.updateBooleanField("f_cloth_rm_iron", true)
+    }
+
+    // Stop iron timer by turning off iron and clearing timestamp in Firebase
+    fun stopIronTimer() {
+        firestoreService.updateBooleanField("f_cloth_rm_iron", false)
+        firestoreService.updateField("f_iron_scheduled_time", null)
     }
 
 

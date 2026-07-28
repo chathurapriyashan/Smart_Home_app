@@ -54,4 +54,25 @@ class FirestoreService {
                 Log.e(TAG, "Failed to update $field", e)
             }
     }
+
+    fun updateField(
+        field: String,
+        value: Any?
+    ) {
+        val updateData = if (value == null) {
+            mapOf<String, Any?>(field to com.google.firebase.firestore.FieldValue.delete())
+        } else {
+            mapOf<String, Any>(field to value)
+        }
+
+        db.collection(COLLECTION)
+            .document(DOCUMENT)
+            .update(updateData)
+            .addOnSuccessListener {
+                Log.d(TAG, "$field updated to $value")
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "Failed to update $field", e)
+            }
+    }
 }
