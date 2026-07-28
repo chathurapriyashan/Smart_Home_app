@@ -7,9 +7,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.smarthome.model.DeviceStatus
+import com.example.smarthome.ui.theme.*
 
 
 @Composable
@@ -17,59 +19,42 @@ fun StatusBadge(
     status: DeviceStatus
 ) {
 
-
-    val (text, color) = when(status) {
-
-
+    val (text, bgColor) = when (status) {
         DeviceStatus.ON -> {
-            "🟢 ON" to Color(0xFF2E7D32)
+            "ON" to StatusOnGreen.copy(alpha = 0.15f)
         }
-
-
         DeviceStatus.OFF -> {
-            "⚪ OFF" to Color(0xFF757575)
+            "OFF" to StatusOffGray.copy(alpha = 0.2f)
         }
-
-
         DeviceStatus.ERROR -> {
-            "🔴 ERROR" to Color(0xFFC62828)
+            "ERROR" to StatusErrorRed.copy(alpha = 0.15f)
         }
-
-
         DeviceStatus.DISCONNECTED -> {
-            "⚫ DISCONNECTED" to Color(0xFF424242)
+            "OFFLINE" to StatusDisconnected.copy(alpha = 0.2f)
         }
-
     }
 
-
+    val textColor = when (status) {
+        DeviceStatus.ON -> StatusOnGreen
+        DeviceStatus.OFF -> TextSecondary
+        DeviceStatus.ERROR -> StatusErrorRed
+        DeviceStatus.DISCONNECTED -> TextMuted
+    }
 
     Text(
-
         text = text,
-
-        color = Color.White,
-
-        fontSize = 14.sp,
-
+        color = textColor,
+        fontSize = 11.sp,
+        fontWeight = FontWeight.Bold,
+        letterSpacing = 1.sp,
         modifier = Modifier
-
             .background(
-
-                color = color,
-
-                shape = RoundedCornerShape(50)
-
+                color = bgColor,
+                shape = RoundedCornerShape(6.dp)
             )
-
             .padding(
-
-                horizontal = 12.dp,
-
-                vertical = 6.dp
-
+                horizontal = 8.dp,
+                vertical = 3.dp
             )
-
     )
-
 }
