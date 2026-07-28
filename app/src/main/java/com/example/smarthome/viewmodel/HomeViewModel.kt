@@ -22,6 +22,9 @@ class HomeViewModel : ViewModel() {
     var ironScheduledTimestamp by mutableStateOf<Timestamp?>(null)
         private set
 
+    var ironSafeMaxDuration by mutableStateOf<Long>(60L)
+        private set
+
 
     // Helper to update a single device from Firebase
     private fun syncDevice(deviceId: String, firebaseField: String) {
@@ -60,6 +63,9 @@ class HomeViewModel : ViewModel() {
 
         // Parse scheduled timer timestamp for iron
         ironScheduledTimestamp = firebaseData["f_iron_scheduled_time"] as? Timestamp
+
+        // Parse maximum safe duration for iron
+        ironSafeMaxDuration = (firebaseData["iron_safe_max_duration"] as? Number)?.toLong() ?: 60L
 
         // Guest Room
         syncDevice("guest_rm_light", "f_guest_rm_light")
@@ -260,6 +266,11 @@ class HomeViewModel : ViewModel() {
     fun stopIronTimer() {
         firestoreService.updateBooleanField("f_cloth_rm_iron", false)
         firestoreService.updateField("f_iron_scheduled_time", null)
+    }
+
+    // Update iron_safe_max_duration in Firebase Firestore
+    fun updateIronSafeMaxDuration(duration: Long) {
+        firestoreService.updateField("iron_safe_max_duration", duration)
     }
 
 

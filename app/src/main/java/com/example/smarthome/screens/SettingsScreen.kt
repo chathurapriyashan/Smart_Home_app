@@ -45,15 +45,19 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.smarthome.R
 import com.example.smarthome.ui.theme.*
+import com.example.smarthome.viewmodel.HomeViewModel
 
 
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(
+    homeViewModel: HomeViewModel = viewModel()
+) {
 
-    var safeDuration by remember { mutableStateOf("") }
-    var appliedDuration by remember { mutableStateOf("15") }
+    var safeDurationInput by remember { mutableStateOf("") }
+    val appliedDuration = homeViewModel.ironSafeMaxDuration
 
 
     Column(
@@ -151,8 +155,8 @@ fun SettingsScreen() {
                 }
 
                 OutlinedTextField(
-                    value = safeDuration,
-                    onValueChange = { safeDuration = it },
+                    value = safeDurationInput,
+                    onValueChange = { safeDurationInput = it },
                     label = {
                         Text("Enter Minutes", color = TextSecondary)
                     },
@@ -170,8 +174,10 @@ fun SettingsScreen() {
 
                 Button(
                     onClick = {
-                        if (safeDuration.isNotEmpty()) {
-                            appliedDuration = safeDuration
+                        val duration = safeDurationInput.toLongOrNull()
+                        if (duration != null && duration > 0) {
+                            homeViewModel.updateIronSafeMaxDuration(duration)
+                            safeDurationInput = ""
                         }
                     },
                     modifier = Modifier.fillMaxWidth(),
