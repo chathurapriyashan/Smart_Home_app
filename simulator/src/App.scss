@@ -343,6 +343,14 @@ $color-gold: #ffd700;
   .z-8 { z-index: 8; }
   .z-9 { z-index: 9; }
   .z-10 { z-index: 10; }
+  .z-11 { 
+    z-index: 11; 
+    clip-path: polygon(10% 16%, 35% 16%, 35% 50%, 10% 50%);
+  }
+  .z-12 { 
+    z-index: 12; 
+    clip-path: polygon(10% 50%, 39% 50%, 39% 82%, 10% 82%);
+  }
 }
 
 /* Setting Section */
