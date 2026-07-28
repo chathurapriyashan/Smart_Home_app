@@ -18,29 +18,228 @@ class HomeViewModel : ViewModel() {
 
     private fun updateDevicesFromFirebase() {
 
-        val isOn =
+        // Living Room Light
+        val livingLightOn =
             firebaseData["g_living_rm_light"] as? Boolean ?: false
 
-
-        val index = _devices.indexOfFirst {
+        val livingLightIndex = _devices.indexOfFirst {
             it.id == "living_light"
         }
 
+        if (livingLightIndex != -1) {
 
-        if (index != -1) {
-
-            _devices[index] =
-                _devices[index].copy(
-
+            _devices[livingLightIndex] =
+                _devices[livingLightIndex].copy(
                     status =
-                        if (isOn)
+                        if (livingLightOn)
                             DeviceStatus.ON
                         else
                             DeviceStatus.OFF,
 
-                    isEnabled = isOn
+                    isEnabled = livingLightOn
                 )
         }
+
+
+        // Kitchen Outlet
+        val kitchenOutletOn =
+            firebaseData["g_kitchen_rm_switch"] as? Boolean ?: false
+
+        val kitchenIndex = _devices.indexOfFirst {
+            it.id == "kitchen_outlet"
+        }
+
+        if (kitchenIndex != -1) {
+
+            _devices[kitchenIndex] =
+                _devices[kitchenIndex].copy(
+                    status =
+                        if (kitchenOutletOn)
+                            DeviceStatus.ON
+                        else
+                            DeviceStatus.OFF,
+
+                    isEnabled = kitchenOutletOn
+                )
+        }
+        // Living Room AC
+
+        val livingAcOn =
+            firebaseData["g_living_rm_ac"] as? Boolean ?: false
+
+
+        val livingAcIndex = _devices.indexOfFirst {
+            it.id == "living_ac"
+        }
+
+
+        if (livingAcIndex != -1) {
+
+            _devices[livingAcIndex] =
+                _devices[livingAcIndex].copy(
+
+                    status =
+                        if (livingAcOn)
+                            DeviceStatus.ON
+                        else
+                            DeviceStatus.OFF,
+
+                    isEnabled = livingAcOn
+                )
+        }
+        // Switch 1
+
+        val switch1On =
+            firebaseData["g_living_rm_switch"] as? Boolean ?: false
+
+
+        val switch1Index = _devices.indexOfFirst {
+            it.id == "switch_1"
+        }
+
+
+        if (switch1Index != -1) {
+
+            _devices[switch1Index] =
+                _devices[switch1Index].copy(
+
+                    status =
+                        if (switch1On)
+                            DeviceStatus.ON
+                        else
+                            DeviceStatus.OFF,
+
+                    isEnabled = switch1On
+                )
+        }
+
+
+// Switch 2
+
+        val switch2On =
+            firebaseData["g_kitchen_rm_switch"] as? Boolean ?: false
+
+
+        val switch2Index = _devices.indexOfFirst {
+            it.id == "switch_2"
+        }
+
+
+        if (switch2Index != -1) {
+
+            _devices[switch2Index] =
+                _devices[switch2Index].copy(
+
+                    status =
+                        if (switch2On)
+                            DeviceStatus.ON
+                        else
+                            DeviceStatus.OFF,
+
+                    isEnabled = switch2On
+                )
+        }
+
+
+// Switch 3
+
+        val switch3On =
+            firebaseData["g_play_rm_switch"] as? Boolean ?: false
+
+
+        val switch3Index = _devices.indexOfFirst {
+            it.id == "switch_3"
+        }
+
+
+        if (switch3Index != -1) {
+
+            _devices[switch3Index] =
+                _devices[switch3Index].copy(
+
+                    status =
+                        if (switch3On)
+                            DeviceStatus.ON
+                        else
+                            DeviceStatus.OFF,
+
+                    isEnabled = switch3On
+                )
+        }
+
+        // Bedroom Light
+
+        val bedroomLightOn =
+            firebaseData["f_bed_rm_light"] as? Boolean ?: false
+
+        val bedroomLightIndex = _devices.indexOfFirst {
+            it.id == "bedroom_light"
+        }
+
+        if (bedroomLightIndex != -1) {
+
+            _devices[bedroomLightIndex] =
+                _devices[bedroomLightIndex].copy(
+
+                    status =
+                        if (bedroomLightOn)
+                            DeviceStatus.ON
+                        else
+                            DeviceStatus.OFF,
+
+                    isEnabled = bedroomLightOn
+                )
+        }
+
+        // Outdoor Light
+
+        val outdoorLightOn =
+            firebaseData["outdoor_light"] as? Boolean ?: false
+
+        val outdoorLightIndex = _devices.indexOfFirst {
+            it.id == "outdoor_light"
+        }
+
+        if (outdoorLightIndex != -1) {
+
+            _devices[outdoorLightIndex] =
+                _devices[outdoorLightIndex].copy(
+
+                    status =
+                        if (outdoorLightOn)
+                            DeviceStatus.ON
+                        else
+                            DeviceStatus.OFF,
+
+                    isEnabled = outdoorLightOn
+                )
+        }
+
+        // CCTV Camera
+
+        val cctvOn =
+            firebaseData["cctv"] as? Boolean ?: false
+
+        val cctvIndex = _devices.indexOfFirst {
+            it.id == "cctv"
+        }
+
+        if (cctvIndex != -1) {
+
+            _devices[cctvIndex] =
+                _devices[cctvIndex].copy(
+
+                    status =
+                        if (cctvOn)
+                            DeviceStatus.ON
+                        else
+                            DeviceStatus.OFF,
+
+                    isEnabled = cctvOn
+                )
+        }
+
+
     }
     // All smart home devices
     private val _devices = mutableStateListOf(
@@ -59,6 +258,15 @@ class HomeViewModel : ViewModel() {
         ),
 
         Device(
+            id = "living_ac",
+            name = "Living Room AC",
+            type = DeviceType.AC,
+            temperature = 24,
+            fanSpeed = "Medium"
+        ),
+
+
+        Device(
             id = "switch_1",
             name = "Switch 1",
             type = DeviceType.SWITCH
@@ -75,15 +283,6 @@ class HomeViewModel : ViewModel() {
             name = "Switch 3",
             type = DeviceType.SWITCH
         ),
-
-        Device(
-            id = "living_ac",
-            name = "Living Room AC",
-            type = DeviceType.AC,
-            temperature = 24,
-            fanSpeed = "Medium"
-        ),
-
 
         // First Floor
 
@@ -160,6 +359,98 @@ class HomeViewModel : ViewModel() {
                     !currentValue
                 )
             }
+            "kitchen_outlet" -> {
+
+                val currentValue =
+                    firebaseData["g_kitchen_rm_switch"] as? Boolean ?: false
+
+                firestoreService.updateBooleanField(
+                    "g_kitchen_rm_switch",
+                    !currentValue
+                )
+            }
+            "living_ac" -> {
+
+                val currentValue =
+                    firebaseData["g_living_rm_ac"] as? Boolean ?: false
+
+
+                firestoreService.updateBooleanField(
+                    "g_living_rm_ac",
+                    !currentValue
+                )
+            }
+            "switch_1" -> {
+
+                val current =
+                    firebaseData["g_living_rm_switch"] as? Boolean ?: false
+
+
+                firestoreService.updateBooleanField(
+                    "g_living_rm_switch",
+                    !current
+                )
+            }
+
+
+            "switch_2" -> {
+
+                val current =
+                    firebaseData["g_kitchen_rm_switch"] as? Boolean ?: false
+
+
+                firestoreService.updateBooleanField(
+                    "g_kitchen_rm_switch",
+                    !current
+                )
+            }
+
+
+            "switch_3" -> {
+
+                val current =
+                    firebaseData["g_play_rm_switch"] as? Boolean ?: false
+
+
+                firestoreService.updateBooleanField(
+                    "g_play_rm_switch",
+                    !current
+                )
+            }
+
+            "bedroom_light" -> {
+
+                val currentValue =
+                    firebaseData["f_bed_rm_light"] as? Boolean ?: false
+
+                firestoreService.updateBooleanField(
+                    "f_bed_rm_light",
+                    !currentValue
+                )
+            }
+            "outdoor_light" -> {
+
+                val currentValue =
+                    firebaseData["outdoor_light"] as? Boolean ?: false
+
+                firestoreService.updateBooleanField(
+                    "outdoor_light",
+                    !currentValue
+                )
+            }
+            "cctv" -> {
+
+                val currentValue =
+                    firebaseData["cctv"] as? Boolean ?: false
+
+                firestoreService.updateBooleanField(
+                    "cctv",
+                    !currentValue
+                )
+            }
+
+
+
 
             else -> {
                 // Other devices will be added later

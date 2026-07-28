@@ -52,7 +52,11 @@ fun GroundFloorScreen(
                 it.id in listOf(
                     "living_light",
                     "kitchen_outlet",
-                    "living_ac"
+                    "living_ac",
+                    "switch_1",
+                    "switch_2",
+                    "switch_3"
+
                 )
             }
             .forEach { device ->

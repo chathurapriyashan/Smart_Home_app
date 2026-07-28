@@ -46,60 +46,31 @@ fun OutdoorScreen(
 
         devices
             .filter {
-                it.id == "outdoor_light"
+                it.id in listOf(
+                    "outdoor_light",
+                    "cctv"
+                )
             }
             .forEach { device ->
 
-
                 DeviceCard(
                     device = device,
-
                     onToggle = {
-
-                        homeViewModel
-                            .toggleDevice(device.id)
-
+                        homeViewModel.toggleDevice(device.id)
                     }
                 )
 
-            }
-
-
-
-        // CCTV Camera
-
-        devices
-            .filter {
-                it.id == "cctv"
-            }
-            .forEach { device ->
-
-
-                DeviceCard(
-                    device = device,
-
-                    onToggle = {
-
-                        homeViewModel
-                            .toggleDevice(device.id)
-
-                    }
-                )
-
-
-                Text(
-                    text =
-                        if(device.status == DeviceStatus.ON)
-                        {
+                if (device.id == "cctv") {
+                    Text(
+                        text = if (device.status == DeviceStatus.ON) {
                             "📹 Camera Online"
-                        }
-                        else
-                        {
+                        } else {
                             "📹 Camera Offline"
                         }
-                )
-
+                    )
+                }
             }
+
 
 
     }
