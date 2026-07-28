@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './App.scss';
 
 import image1 from './1.png';
 import image2 from './2.png';
 import image3 from './3.png';
+import image4 from './4.png';
 import lightsLines from './lights-lines.png';
 import switchingLines from './switching-lines.png';
 import outdoorLines from './outdoor-lines.png';
@@ -24,6 +25,12 @@ function App() {
   const [isWirelinesHovered, setIsWirelinesHovered] = useState(false);
   const [appStatus, setAppStatus] = useState(null);
 
+  // Iron Timer State
+  const [ironTimeLeft, setIronTimeLeft] = useState(0);
+  const [isIronTimerHovered, setIsIronTimerHovered] = useState(false);
+  const [editTimeValue, setEditTimeValue] = useState("");
+  const wasIronOn = useRef(false);
+
   useEffect(() => {
     const unsub = onSnapshot(doc(db, documentCollection, documentId), (docSnapshot) => {
       const source = docSnapshot.metadata.hasPendingWrites ? "Local" : "Server";
@@ -32,6 +39,54 @@ function App() {
     });
     return () => unsub();
   }, []);
+
+  // Initialize Iron Timer on toggle
+  useEffect(() => {
+    if (appStatus) {
+      if (appStatus.f_cloth_rm_iron && !wasIronOn.current) {
+        setIronTimeLeft(appStatus.iron_safe_max_duration || 60);
+      } else if (!appStatus.f_cloth_rm_iron) {
+        setIronTimeLeft(appStatus.iron_safe_max_duration || 60); // Reset display to max when off
+      }
+      wasIronOn.current = appStatus.f_cloth_rm_iron;
+    }
+  }, [appStatus?.f_cloth_rm_iron, appStatus?.iron_safe_max_duration]);
+
+  // Countdown effect
+  useEffect(() => {
+    let interval;
+    if (appStatus?.f_cloth_rm_iron && ironTimeLeft > 0) {
+      interval = setInterval(() => {
+        setIronTimeLeft((prev) => prev - 1);
+      }, 1000);
+    } else if (appStatus?.f_cloth_rm_iron && ironTimeLeft === 0 && wasIronOn.current) {
+      // Auto turn off
+      handleStatusChange('f_cloth_rm_iron', false);
+    }
+    return () => clearInterval(interval);
+  }, [appStatus?.f_cloth_rm_iron, ironTimeLeft]);
+
+  const formatTime = (seconds) => {
+    const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+    const s = (seconds % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
+  };
+
+  const handleSaveIronTime = async () => {
+    const val = parseInt(editTimeValue);
+    if (!isNaN(val) && val > 0) {
+      try {
+        const deviceRef = doc(db, documentCollection, documentId);
+        await setDoc(deviceRef, { iron_safe_max_duration: val }, { merge: true });
+        setIronTimeLeft(val);
+        setIsIronTimerHovered(false);
+        toast.success("Timer updated!");
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to update timer!");
+      }
+    }
+  };
 
   const handleStatusChange = async (key, value) => {
     if (!appStatus) return;
@@ -148,8 +203,7 @@ function App() {
           { id: 16, label: 'Living Room Switch', Icon: RxSwitch, key: 'g_living_rm_switch' },
           { id: 17, label: 'CCTV', Icon: BiCctv, key: 'cctv' },
           { id: 18, label: 'AC 1', Icon: FaSnowflake, key: 'f_bed_rm_ac' },
-          { id: 19, label: 'AC 2', Icon: FaSnowflake, key: 'g_living_rm_ac' },
-          { id: 21, label: 'Iron', Icon: MdIron, key: 'f_cloth_rm_iron' }
+          { id: 19, label: 'AC 2', Icon: FaSnowflake, key: 'g_living_rm_ac' }
         ].map(badge => (
           <div key={badge.id} className={`status-badge status-badge-${badge.id}`}>
             <div className="badge-header">
@@ -168,6 +222,48 @@ function App() {
             </div>
           </div>
         ))}
+
+        {/* Special Iron Badge (Badge 21) */}
+        {appStatus && (
+          <div className="status-badge status-badge-21">
+            <div className="badge-header">
+              <div className={`status-dot ${appStatus.f_cloth_rm_iron ? 'flashing-green' : ''}`}></div>
+              <div className="status-text">
+                <MdIron className="bulb-icon" />
+                {appStatus.f_cloth_rm_iron ? 'On' : 'Off'}
+              </div>
+            </div>
+            <div className="badge-content">
+              <label className="switch">
+                <input type="checkbox" checked={appStatus.f_cloth_rm_iron || false} onChange={(e) => handleStatusChange('f_cloth_rm_iron', e.target.checked)} />
+                <span className="slider round"></span>
+              </label>
+              <span className="toggle-label">Iron</span>
+            </div>
+            <div 
+              className="iron-timer-container"
+              onMouseEnter={() => {
+                setEditTimeValue(appStatus.iron_safe_max_duration || 60);
+                setIsIronTimerHovered(true);
+              }}
+              onMouseLeave={() => setIsIronTimerHovered(false)}
+            >
+              {formatTime(ironTimeLeft)}
+              
+              {isIronTimerHovered && (
+                <div className="iron-timer-popup">
+                  <input 
+                    type="number" 
+                    value={editTimeValue} 
+                    onChange={(e) => setEditTimeValue(e.target.value)}
+                    placeholder="Secs"
+                  />
+                  <button onClick={handleSaveIronTime}>Save</button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Wirelines / Master Badge */}
         {appStatus && (
@@ -229,6 +325,12 @@ function App() {
         </div>
         <div className="image-layer z-10" style={{ opacity: isWirelinesHovered ? 1 : 0, transition: 'opacity 0.4s ease' }}>
           <img src={outdoorLines} alt="Outdoor Lines" />
+        </div>
+        <div className="image-layer z-11" style={{ opacity: appStatus?.f_bed_rm_ac ? 0.3 : 0, transition: 'opacity 0.4s ease' }}>
+          <img src={image4} alt="Layer 11" />
+        </div>
+        <div className="image-layer z-12" style={{ opacity: appStatus?.g_living_rm_ac ? 0.3 : 0, transition: 'opacity 0.4s ease' }}>
+          <img src={image4} alt="Layer 12" />
         </div>
       </div>
 
