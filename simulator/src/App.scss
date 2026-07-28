@@ -208,7 +208,8 @@ $color-gold: #ffd700;
   }
 
   .iron-timer-container {
-    margin-top: 10px;
+    margin-top: 0;
+    margin-left: 10px;
     padding: 5px 10px;
     border: 0.1px solid rgba(128, 128, 128, 0.5);
     border-radius: 5px;
@@ -287,7 +288,15 @@ $color-gold: #ffd700;
   .status-badge-17 { top: 49%; left: 6%; }
   .status-badge-18 { top: 17%; left: 16%; }
   .status-badge-19 { top: 49%; left: 14%; }
-  .status-badge-21 { top: 32%; left: 47%; }
+  .status-badge-21 { 
+    top: 32%; 
+    left: 47%; 
+    max-width: 18.5rem;
+    
+    &:hover {
+      overflow: visible;
+    }
+  }
   
   .image-layer {
     position: absolute;

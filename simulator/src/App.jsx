@@ -228,6 +228,28 @@ function App() {
           <div className="status-badge status-badge-21">
             <div className="badge-header">
               <div className={`status-dot ${appStatus.f_cloth_rm_iron ? 'flashing-green' : ''}`}></div>
+              <div 
+                className="iron-timer-container"
+                onMouseEnter={() => {
+                  setEditTimeValue(appStatus.iron_safe_max_duration || 60);
+                  setIsIronTimerHovered(true);
+                }}
+                onMouseLeave={() => setIsIronTimerHovered(false)}
+              >
+                {formatTime(ironTimeLeft)}
+                
+                {isIronTimerHovered && (
+                  <div className="iron-timer-popup">
+                    <input 
+                      type="number" 
+                      value={editTimeValue} 
+                      onChange={(e) => setEditTimeValue(e.target.value)}
+                      placeholder="Secs"
+                    />
+                    <button onClick={handleSaveIronTime}>Save</button>
+                  </div>
+                )}
+              </div>
               <div className="status-text">
                 <MdIron className="bulb-icon" />
                 {appStatus.f_cloth_rm_iron ? 'On' : 'Off'}
@@ -239,28 +261,6 @@ function App() {
                 <span className="slider round"></span>
               </label>
               <span className="toggle-label">Iron</span>
-            </div>
-            <div 
-              className="iron-timer-container"
-              onMouseEnter={() => {
-                setEditTimeValue(appStatus.iron_safe_max_duration || 60);
-                setIsIronTimerHovered(true);
-              }}
-              onMouseLeave={() => setIsIronTimerHovered(false)}
-            >
-              {formatTime(ironTimeLeft)}
-              
-              {isIronTimerHovered && (
-                <div className="iron-timer-popup">
-                  <input 
-                    type="number" 
-                    value={editTimeValue} 
-                    onChange={(e) => setEditTimeValue(e.target.value)}
-                    placeholder="Secs"
-                  />
-                  <button onClick={handleSaveIronTime}>Save</button>
-                </div>
-              )}
             </div>
           </div>
         )}
