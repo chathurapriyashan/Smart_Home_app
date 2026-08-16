@@ -26,7 +26,7 @@ Watch the complete project demonstration:
 
 ## Overview
 
-<p align="center"> <img src="assets/smart-home-system.png" alt="Smart Home Management System - Web and Mobile Applications" width="900"> </p>
+<p align="center" style="transform:rotate(90deg);"> <img src="image.png" alt="Smart Home Management System - Web and Mobile Applications" width="900"> </p>
 <p align="center"> <em> Smart home dashboard running on the web application alongside the Android mobile application. </em> </p>
 
 The **Smart Home Management System** is a software-based smart home solution designed to provide users with a convenient way to manage home devices through digital interfaces.
